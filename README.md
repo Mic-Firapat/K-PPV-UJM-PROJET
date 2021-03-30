@@ -1,2 +1,3 @@
 # K-PPV-UJM-PROJET
-Projet J-PPV pour l'UE de Programmation Impérative
+
+Page GitHub pour le Projet de Programmation Impérative 2.
