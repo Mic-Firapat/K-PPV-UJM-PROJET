@@ -30,7 +30,7 @@
 # $\^ => correspond à la liste des dépendances
 # $\< => correspond à la première dépendance
 
-#Bienvenu dans ce magnifique MAKEFILE
+#Bienvenue dans ce magnifique MAKEFILE
 
 
 #Détails des macros :
