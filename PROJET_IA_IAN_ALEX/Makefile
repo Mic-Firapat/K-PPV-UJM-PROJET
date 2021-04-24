@@ -32,7 +32,6 @@
 
 #Bienvenue dans ce magnifique MAKEFILE
 
-
 #Détails des macros :
 CC = gcc
 OPTIONS = -W -Wall -std=c89 -pedantic -O3
