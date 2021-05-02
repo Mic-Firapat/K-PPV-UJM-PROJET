@@ -30,11 +30,12 @@
 # $\^ => correspond à la liste des dépendances
 # $\< => correspond à la première dépendance
 
-#Bienvenue dans ce magnifique MAKEFILE
+#Bienvenu dans ce magnifique MAKEFILE
+
 
 #Détails des macros :
 CC = gcc
-OPTIONS = -W -Wall -std=c89 -pedantic -O3
+OPTIONS = -g -W -Wall -std=c89 -pedantic -O3
 OPTIONS_MLV_1 = `pkg-config --cflags MLV` `pkg-config --libs-only-other --libs-only-L MLV`
 OPTIONS_MLV_2 = `pkg-config --libs-only-l MLV`
 EXEC = executable
