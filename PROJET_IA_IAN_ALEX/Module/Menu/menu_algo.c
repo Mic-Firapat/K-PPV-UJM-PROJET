@@ -1,6 +1,6 @@
 #include "menu.h"
 
-
+/*Imprime l'engrenage dans la case dessiner à la postion attendue */
 void dessine_engrenage(int taille, int pos_x, int pos_y){
   MLV_Image * image = MLV_load_image("./Module/Image/gear.png");
 
@@ -106,6 +106,7 @@ void changement_mode(int w, int h, char * mode){
   
 }
 
+/*Ajoute le bouton d'ajout de point ou classe*/
 void bouton_point(int w, int h, char * action){
 
   MLV_draw_text_box((w/2)+w/50,
@@ -125,7 +126,7 @@ void bouton_point(int w, int h, char * action){
   
 }
 
-
+/*Ajoute le bouton ajout de classe */
 void ajout_classe(int w, int h){
   
   MLV_draw_text_box((w/2)+w/50,
@@ -144,7 +145,7 @@ void ajout_classe(int w, int h){
   
 }
 
-
+/*Ajoute l'onglet des options d'affichage */
 void options_affichage(int w, int h){
   int taille_x=0, taille_y=0;
   
@@ -188,6 +189,7 @@ void options_affichage(int w, int h){
   
 }
 
+/*Ajoute les deux boutons liés aux sauvegardes */
 void sauvegarde(int w, int h){
 
   MLV_draw_text_box(w-(w/2.2),
@@ -217,6 +219,7 @@ void sauvegarde(int w, int h){
 		    MLV_VERTICAL_CENTER);
 }
 
+/*Affiche le menu complet */
 void affiche_menu_algo(int w, int h, char * m){
 
   reinitialise_fenetre(w,h);
