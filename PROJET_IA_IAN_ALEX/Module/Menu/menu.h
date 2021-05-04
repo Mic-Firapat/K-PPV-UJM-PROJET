@@ -1,7 +1,8 @@
 
 #ifndef MENU_H
 #define MENU_H
-
+#define ECART_HAUT 10
+#define ECART_INTER 8
 #include "../necessaire.h"
 
 /*Fonction qui gère l'affichage du menu */
