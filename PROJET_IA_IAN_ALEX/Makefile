@@ -43,10 +43,14 @@ TEST = test_fct
 CIBLE = $(EXEC) $(TEST)
 
 # Cette commande récupère les sources
-SOURCE= $(wildcard *.c) $(wildcard */*/*.c)
+SOURCE= $(wildcard */*/*.c)
+MAIN_S= main.c
+TEST_S= ./Fichier_test/test.c
 
 # Cette commande permet de récupérer les objets depuis nos sources:
 OBJET	:= $(SOURCE: .c=.o)
+MAIN_O= $(MAIN_S: .c=.o)
+TEST_O= $(TEST_S: .c=.o)
 
 # Cette commande récupère tout nos fichiers en-tête
 HEADER=$(wildcard */*.h) $(wildcard */*/*.h)
@@ -71,13 +75,13 @@ all: $(CIBLE)
 # $\^ => correspond à la liste des dépendances
 # $\< => correspond à la première dépendance
 
-executable: $(OBJET)
+executable: $(MAIN_O) $(OBJET)
 	$(CC) $(OPTIONS) $^ $(OPTIONS_MLV_2) -o $@ 
 
 # Déclaration de la cible test_fct :
 
-test_fct: $(OBJET)
-	$(CC) $^ -o $@
+test_fct: $(TEST_O) $(OBJET)
+	$(CC) $(OPTIONS) $^ $(OPTIONS_MLV_2) -o $@
 
 
 # DEPENDANCE :

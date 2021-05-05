@@ -160,7 +160,7 @@ void options_affichage(int w, int h){
 		       &taille_x,
 		       &taille_y);
   
-  MLV_draw_text((w/2+w/50)+(taille_x/1.5),
+  MLV_draw_text((w/1.5),
 	        h/3,
 		"Options d'affichage",
 		MLV_COLOR_GOLDENROD);
@@ -172,7 +172,7 @@ void options_affichage(int w, int h){
 		     MLV_COLOR_WHITESMOKE);
   
   MLV_draw_text((w/2+w/50)+w/20,
-		h/2.25,
+		h/2.25+(w/30)/2,
 		"Voisinage",
 		MLV_COLOR_GOLDENROD);
   
@@ -183,7 +183,7 @@ void options_affichage(int w, int h){
 		     MLV_COLOR_WHITESMOKE);
 
   MLV_draw_text((w/2+w/50)+w/20,
-		h/1.9,
+		h/1.9+(w/30)/2,
 		"Prise de décision",
 		MLV_COLOR_GOLDENROD);
   
