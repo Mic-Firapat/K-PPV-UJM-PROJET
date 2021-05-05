@@ -13,8 +13,8 @@
 #define CMAX 2
 
 /* Taille de la fenêtre*/
-#define WIDTH 1500 
-#define HEIGHT 940
+#define WIDTH 1280
+#define HEIGHT 720
 
 
 #endif
