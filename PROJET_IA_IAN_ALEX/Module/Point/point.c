@@ -1,5 +1,8 @@
 #include "point.h"
 
+extern int WIDTH;
+extern int HEIGHT;
+
 void pxtopoint(Point *p,int x, int y){
   /*x,y position du clic dans toute la fenêtre
     Change les coordonnees du point pour qu'elles collent avec le clic*/
