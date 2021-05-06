@@ -1,7 +1,9 @@
 #include "../Module/Menu/menu.h"
 #include "../Module/Point/point.h"
 
-/*Pour tester tes fonctions sur la struct point */
+/*Taille dans le fenêtre*/
+int WIDTH = 1280;
+int HEIGHT = 720;
 
 int main(){
 
@@ -19,5 +21,7 @@ int main(){
     printf("%d\n%d\n",c->x,c->y);
     printf("%f\n",dist(p,pp));
     printf("%f\n",sqrt(8));
+    
     exit(1);
+    
 }
