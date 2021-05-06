@@ -13,10 +13,6 @@
 #define DIMENSION 2
 #define CMAX 2
 
-/* Taille de la fenêtre*/
-#define WIDTH 1280
-#define HEIGHT 720
-
 typedef struct coordonnees {
     int x;
     int y;
