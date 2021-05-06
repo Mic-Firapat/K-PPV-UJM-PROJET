@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <MLV/MLV_all.h>
+#include <math.h>
 
 #define NMAX 100
 #define DIMENSION 2
@@ -16,5 +17,9 @@
 #define WIDTH 1280
 #define HEIGHT 720
 
+typedef struct coordonnees {
+    int x;
+    int y;
+} Coord;
 
 #endif
