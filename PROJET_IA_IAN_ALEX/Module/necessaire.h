@@ -14,7 +14,7 @@
 #define CMAX 2
 
 /* Taille de la fenêtre*/
-int WIDTH 1280, HEIGHT 720;
+int WIDTH=1280,HEIGHT=720;
 
 typedef struct coordonnees {
     int x;
