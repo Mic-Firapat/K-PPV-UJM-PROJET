@@ -20,7 +20,7 @@ void affiche_titre(int w, int h, int *px,int *py, MLV_Font *font){
 
 
 /*Affiche le bouton pour lancer l'algo KPPV */
-void affiche_start(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_start(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   char *lance = "Lancer l'algo";
   int sauv = *py;
 
@@ -40,12 +40,12 @@ void affiche_start(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_DARKSLATEGREY,
 				      MLV_TEXT_CENTER);
 
+  tab[0] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
   *py += sauv + h/ECART_INTER;
-
 }
 
 /*Affiche le bouton options */
-void affiche_options(int w, int h , int *px, int *py, MLV_Font *font){
+void affiche_options(int w, int h , int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   char *options = "Options";
   int sauv = *py;
 
@@ -64,12 +64,13 @@ void affiche_options(int w, int h , int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
 				      MLV_TEXT_CENTER);
-  *py += sauv + h/ECART_INTER;
   
+  tab[1] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv +(*py*2));
+  *py += sauv + h/ECART_INTER;
 }
 
 /*Affiche le bouton quitter */
-void affiche_quitter(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_quitter(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   char *quitter = "Quitter";
   int sauv = *py;
 
@@ -87,23 +88,25 @@ void affiche_quitter(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_BLACK,
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
-				      MLV_TEXT_CENTER);			     
+				      MLV_TEXT_CENTER);
+  
+  tab[2] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv +(*py*2));
   *py += sauv + h/ECART_INTER;
 }
 
 /*Assemble le menu principal */
-void affiche_menu_principal(int w, int h){
+void affiche_menu_principal(int w, int h, Zone_clic tab[]){
   MLV_Font *police = MLV_load_font("Module/Habillage/Police/Knights-Quests.ttf",
 				   w/18);
   int placement_y=0, placement_x=0;
 
   affiche_titre(w, h, &placement_x, &placement_y, police);
   
-  affiche_start(w, h,  &placement_x, &placement_y, police);
+  affiche_start(w, h,  &placement_x, &placement_y, police, tab);
   
-  affiche_options(w, h,  &placement_x, &placement_y, police);
+  affiche_options(w, h,  &placement_x, &placement_y, police, tab);
   
-  affiche_quitter(w, h,  &placement_x, &placement_y, police);
+  affiche_quitter(w, h,  &placement_x, &placement_y, police, tab);
   
   MLV_actualise_window();
   MLV_free_font(police);

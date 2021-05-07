@@ -6,10 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <MLV/MLV_all.h>
 #include <math.h>
+#include <MLV/MLV_all.h>
 
 #define NMAX 100
+#define TAB_MAX 15
 #define DIMENSION 2
 #define CMAX 2
 

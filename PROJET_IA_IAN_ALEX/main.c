@@ -3,9 +3,9 @@
 
 #include "./Module/Menu/menu.h"
 
-/*Taille de la fenêtre*/
-int WIDTH = 1280;
-int HEIGHT = 720;
+/*Taille fenêtre*/
+int WIDTH=640, HEIGHT=480;
+
 
 /*Lance la fonction pour l'interface graphique */
 int main(){

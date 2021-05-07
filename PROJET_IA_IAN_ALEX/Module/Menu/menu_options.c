@@ -18,7 +18,7 @@ void affiche_resolution(int w, int h, int *px,int *py, MLV_Font *font){
 }
 
 /*Affiche le bouton resol 1920x1080 */
-void affiche_1920(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_1920(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   int sauv = *py;
   MLV_get_size_of_adapted_text_box_with_font("1920x1080",
 					     font,
@@ -36,12 +36,13 @@ void affiche_1920(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_DARKSLATEGREY,
 				      MLV_TEXT_CENTER);
 
-  *py += sauv + h/ECART_INTER;
+  tab[0] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
+  *py += sauv + h/50;
 
 }
 
 /*Affiche le bouton resol 1280x720 */
-void affiche_1280(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_1280(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   int sauv = *py;
   MLV_get_size_of_adapted_text_box_with_font("1280x720",
 					     font,
@@ -58,13 +59,14 @@ void affiche_1280(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
 				      MLV_TEXT_CENTER);
-
-  *py += sauv + h/ECART_INTER;
+  
+  tab[1] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
+  *py += sauv + h/50;
 
 }
 
 /*Affiche le bouton resol 640x480 */
-void affiche_640(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_640(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   int sauv = *py;
  
   MLV_get_size_of_adapted_text_box_with_font("640x480",
@@ -82,12 +84,14 @@ void affiche_640(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
 				      MLV_TEXT_CENTER);
-  *py += sauv + h/ECART_INTER;
+
+  tab[2] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
+  *py += sauv + h/50;
 
 }
 
 /*Affiche le bouton retour */
-void affiche_retour(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_retour(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   char *retour = "Retour";
   int sauv = *py;
 
@@ -105,13 +109,15 @@ void affiche_retour(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_BLACK,
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
-				      MLV_TEXT_CENTER);			     
-  *py += sauv + h/ECART_INTER;
+				      MLV_TEXT_CENTER);
+
+  tab[3] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
+  *py += sauv + h/50;
   
 }
 
 /*Affiche le bouton quitter */
-void affiche_quitter_option(int w, int h, int *px, int *py, MLV_Font *font){
+void affiche_quitter_option(int w, int h, int *px, int *py, MLV_Font *font, Zone_clic tab[]){
   char *quitter = "Quitter";
   int sauv = *py;
 
@@ -129,27 +135,29 @@ void affiche_quitter_option(int w, int h, int *px, int *py, MLV_Font *font){
 				      MLV_COLOR_BLACK,
 				      MLV_COLOR_GOLDENROD,
 				      MLV_COLOR_DARKSLATEGREY,
-				      MLV_TEXT_CENTER);			     
-  *py += sauv + h/ECART_INTER;
+				      MLV_TEXT_CENTER);
+
+  tab[4] = creer_zone_val((w/2)-(*px/2),sauv+(*py),(w/2)+(*px/2),sauv+(*py)*2);
+  *py += sauv + h/50;
 }
 
 /*Affiche l'ensemble du menu option */
-void affiche_menu_option(int w, int h){
+void affiche_menu_option(int w, int h, Zone_clic tab[]){
   MLV_Font *police = MLV_load_font("Module/Habillage/Police/Knights-Quests.ttf",
-				   w/35);
+				   w/20);
   int placement_y=0, placement_x=0;
 
   affiche_resolution(w, h, &placement_x, &placement_y, police);
 
-  affiche_1920(w,h,&placement_x, &placement_y,police);
+  affiche_1920(w,h,&placement_x, &placement_y,police, tab);
 
-  affiche_1280(w,h,&placement_x, &placement_y,police);
+  affiche_1280(w,h,&placement_x, &placement_y,police, tab);
 
-  affiche_640(w,h,&placement_x, &placement_y,police);
+  affiche_640(w,h,&placement_x, &placement_y,police, tab);
 
-  affiche_retour(w,h,&placement_x,&placement_y,police);
+  affiche_retour(w,h,&placement_x,&placement_y,police, tab);
 
-  affiche_quitter_option(w, h,  &placement_x, &placement_y, police);
+  affiche_quitter_option(w, h,  &placement_x, &placement_y, police, tab);
 
   MLV_actualise_window();
   MLV_free_font(police);
