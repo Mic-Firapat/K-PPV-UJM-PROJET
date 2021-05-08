@@ -2,6 +2,7 @@
 #include "../Module/Point/point.h"
 #include "../Module/Zone/zone.h"
 #include "../Module/Lecture/lecture.h"
+#include "../Module/Sauvegarde/sauvegarde.h"
 
 /*Pour tester tes fonctions sur la struct point */
 
@@ -21,9 +22,12 @@ int main(){
   Coord ori, fin;
 
   /*TEST LECTURE*/
-  char *fichier = "Fichier_test/fichier_test_1";
+  char *fichier = "Sauvegardes/fichier_test_1";
   Point *t = NULL;
   int nbclasses = 0,n,i;
+
+  /*TEST SAUVEGARDE*/
+  char *sauve = "Sauvegardes/sauv_test";
   /*POINTS */
 
   printf("-----\nTest sur les Points\n-----\n");
@@ -58,6 +62,10 @@ int main(){
   for (i=0; i < n; i++){
       printf("%d %f %f\n",t[i].classe, t[i].x, t[i].y);
   }
+
+  printf("----------\nTest sauvegarde Fichier\n----------\n");
+
+  sauvegarde_fichier(t, sauve, n, nbclasses);
 
 
 
