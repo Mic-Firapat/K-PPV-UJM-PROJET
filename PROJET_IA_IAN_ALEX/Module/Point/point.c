@@ -55,6 +55,9 @@ Point *ajout_point_tab(Point *t, Point *p, int *n){
 }
 
 Point *retrait_point_tab(Point *t, int *n){
+    if (n==0){
+        return NULL;
+    }
     (*n)--;
     t = realloc(t, sizeof(Point) * (*n));
     return t;
@@ -112,3 +115,20 @@ int *k_voisins(Point *t, Point *p, int k, int n){
     return voisins;
 }
 
+int classe_majoritaire(Point *t, int *voisins, int k, int nbclasses){
+    int *c = malloc(sizeof(int) * (nbclasses + 1));
+    int i,cmax= 0,classe = 1;
+    for (i = 1; i < nbclasses + 1; i++){
+        c[i] = 0;
+    }
+    for (i=1;i < k+1; i++){
+        c[t[voisins[i]].classe] = c[t[voisins[i]].classe];
+    }
+    for (i = 1; i < nbclasses + 1; i++){
+        if (c[i] > cmax){
+            cmax = c[i];
+            classe = i;
+        }
+    }
+    return classe;
+}

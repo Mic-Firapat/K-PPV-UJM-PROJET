@@ -44,4 +44,9 @@ int *k_voisins(Point *t, Point *p, int k, int n);
 le premier élément du tableau correspond à l'indice du voisin le plus éloigné. Utilisé pour tracer le cercle
 Si p est déjà dans le tableau t, il est ignoré dans les voisins
 n = taille du tableau t (p compris si il s'y trouve)*/
+
+int classe_majoritaire(Point *t, int *voisins,int k, int nbclasses);
+/*Renvoie la classe majoritaire des k-voisins
+  voisins doit être généré par k_voisins
+  Suppose que la classe est entre 1 et nbclasses (inclus)*/
 #endif
