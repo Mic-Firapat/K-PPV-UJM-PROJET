@@ -23,11 +23,15 @@ int main(){
 
   /*TEST LECTURE*/
   char *fichier = "Sauvegardes/fichier_test_1";
+  char *blob = "Sauvegardes/blobs.txt";
   Point *t = NULL;
-  int nbclasses = 0,n,i;
+  Point *tb = NULL;
+  int nbclasses = 0,n,i, nbclassesb = 0,nb;
 
   /*TEST SAUVEGARDE*/
   char *sauve = "Sauvegardes/sauv_test";
+
+
   /*POINTS */
 
   printf("-----\nTest sur les Points\n-----\n");
@@ -68,7 +72,25 @@ int main(){
   sauvegarde_fichier(t, sauve, n, nbclasses);
 
 
+  /*TEST FICHIER .txt  */
 
+  printf("-----------\nTest lecture fichier blob\n");
+
+  tb = chargement_fichier(blob, &nb, &nbclassesb);
+
+  if(tb != NULL){
+    printf("%d %d\n",nb,nbclassesb);
   
+    for (i=0; i < nb; i++){
+      printf("%d %f %f\n",tb[i].classe, tb[i].x, tb[i].y);
+    }
+  }
+
+
+  printf("----------\nTest sauvegarde Fichier\n----------\n");
+
+  sauvegarde_fichier(t, sauve, nb, nbclassesb);
+
+
   exit(1);
 }

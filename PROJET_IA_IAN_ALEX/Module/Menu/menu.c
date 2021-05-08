@@ -23,20 +23,36 @@ Description des variables :
 
    - menu_precedent -> Permet de réafficher le bon menu lors du retour du menu option
 
+   - k -> variable pour indiquer la valeur de k (WAHOU)
+
+   - test_val_k -> variable qui  servira à tester la valeur de k tapper par l'utilisateur
+
+   - quit -> sert à sortir de la boucle do/while de l'input box
+
    - mode_algo -> Sert à afficher le mode actuel, par défaut creation
 
    - tab -> Contient toutes les zones sur lesquels nous pouvons cliquer
 
+   - change_val_k -> input_box MLV, sert  lorsque l'on appuie sur k
+
+   - event -> MLV_event, sert pour savoir si l'on utilisé l'input_box
+
 */
 void affiche_menu(){
-  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0;
-  char *mode_algo="creation";
+  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0;
+  char *mode_algo="creation", *val_k = NULL;
   Zone_clic tab[TAB_MAX];
+  MLV_Input_box *change_val_k;
+  MLV_Event event = MLV_NONE;
+  /*Point tableau_point[NMAX];*/
 
+  /*Init de tab pour définir les zones de clic*/
   for(i=0;i<TAB_MAX;i++){
     tab[i] = creer_zone_val(0,0,0,0);
   }
-  
+  /*Init de tableau_point, qui contiendra nos points */
+
+  /*Init val_k */
   MLV_create_window("K-PPV","k-ppv",WIDTH, HEIGHT);
 
   MLV_clear_window(MLV_rgba(102,102,102,255));
@@ -73,7 +89,7 @@ void affiche_menu(){
 		tab[i] = creer_zone_val(0,0,0,0);
 	      }
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
-	      affiche_menu_algo(WIDTH,HEIGHT,mode_algo, tab);
+	      affiche_menu_algo(WIDTH,HEIGHT,mode_algo, tab, k);
 	      boucle_menu = 2;
 	      clic = 0;
 	      break;
@@ -125,7 +141,7 @@ void affiche_menu(){
 	      tab[i] = creer_zone_val(0,0,0,0);
 	    }
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
-	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab);
+	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	    clic = 0;
 	    printf("AJOUTER FONCTION AFFICHE POINTS\n");
 	    break;
@@ -139,13 +155,13 @@ void affiche_menu(){
 	    if(strcmp(mode_algo, "creation") == 0){
 	      mode_algo = "kppv";
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
-	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab);
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	      clic = 0;
 	    }
 	    else if(strcmp(mode_algo, "kppv") == 0){
 	      mode_algo = "creation";
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
-	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab);
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	      clic = 0;
 	    }
 	    else{
@@ -186,6 +202,93 @@ void affiche_menu(){
 	  case 9:
 	    printf("CHARGE LES DONNEES D'UN FICHIER\n");
 	    clic = 0;
+	    break;
+	    /*On a cliqué sur flèche du bas */
+	  case 10:
+	    if(k == 1){
+	      clic = 0;
+	      break;
+	    }
+	    else{
+	      k--;
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      clic = 0;
+	    }
+	    break;
+	    /*On a cliqué sur flèche du haut */
+	  case 11:
+	    if(k < NMAX){
+	      k++;
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      clic = 0;
+	      break;
+	    }
+	    clic = 0;
+	    break;
+	  case 12:
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    change_val_k = MLV_create_input_box (WIDTH/2-WIDTH/4,
+						 HEIGHT/2-HEIGHT/5,
+						 WIDTH/2,
+						 HEIGHT/5,
+						 MLV_COLOR_GREEN,
+						 MLV_COLOR_GREEN,
+						 MLV_COLOR_BLACK,
+						 "Entrez la valeur de k :");
+	    MLV_draw_text_box(10,
+			      HEIGHT/10,
+			      WIDTH/1.1,
+			      HEIGHT/8,
+			      "Pour utiliser la boîte, vous devez cliquer dessus.\nAttention : Vous ne quitterez pas ce menu tant qu'une valeur valide ne sera rentrée.\n(Une valeur valide est un entier compris entre 1 et le nombre de points.)",
+			      2,
+			      MLV_COLOR_BLACK,
+			      MLV_COLOR_GREEN,
+			      MLV_COLOR_BLACK,
+			      MLV_TEXT_CENTER,
+			      MLV_HORIZONTAL_CENTER,
+			      MLV_VERTICAL_CENTER);
+	    MLV_draw_all_input_boxes();
+	    MLV_actualise_window();
+	    
+	    /*boucle tant que l'utilisateur n'entre pas une valeur numérique valide ou ne quitte pas l'input box */
+	    do{
+	      /*Récupère un evenement */
+	      event = MLV_get_event(NULL, NULL, NULL,&val_k, &change_val_k,NULL, NULL, NULL, NULL);
+
+	      /*On le traite seulement si il s'agit d'un evenement input_box */
+	      if ( event == MLV_INPUT_BOX){
+		test_val_k = atoi(val_k);
+		if(test_val_k < NMAX && test_val_k >= 1){
+		  k = test_val_k;
+		  quit = 1;
+		}
+		test_val_k = 0;
+	      }
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      MLV_draw_text_box(10,
+				HEIGHT/10,
+				WIDTH/1.1,
+				HEIGHT/8,
+				"Pour utiliser la boîte, vous devez cliquer dessus.\nAttention : Vous ne quitterez pas ce menu tant qu'une valeur valide ne sera rentrée.\n(Une valeur valide est un entier compris entre 1 et le nombre de points.)",
+				2,
+				MLV_COLOR_BLACK,
+				MLV_COLOR_GREEN,
+				MLV_COLOR_BLACK,
+				MLV_TEXT_CENTER,
+				MLV_HORIZONTAL_CENTER,
+				MLV_VERTICAL_CENTER);
+	      
+	      MLV_draw_all_input_boxes();
+	      MLV_actualise_window();
+	    } while(quit == 0);
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    clic = 0;
+	    quit = 0;
+	    
+	    MLV_free_input_box (change_val_k);
 	    break;
 	    /*Sinon on cliqué sur une zone inutile */
 	  default:
@@ -241,7 +344,7 @@ void affiche_menu(){
 		  tab[i] = creer_zone_val(0,0,0,0);
 		}
 		MLV_clear_window(MLV_rgba(102,102,102,255));
-		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab);
+		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 		clic = 0;
 		boucle_menu = 2;
 	      }

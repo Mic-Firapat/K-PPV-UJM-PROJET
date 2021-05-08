@@ -46,9 +46,11 @@ void reinitialise_fenetre(int w, int h, Zone_clic tab[]){
 }
 
 /*Ajoute la cellule valeur de k */
-void valk(int w, int h){
+void valk(int w, int h, Zone_clic tab[], int k){
+  MLV_Image *fh = MLV_load_image("./Module/Image/test.png");
+  MLV_Image *fb = MLV_load_image("./Module/Image/test_bas.png");
 
-  MLV_draw_text_box((w/2)-(w/3.5),
+  MLV_draw_text_box((w/2)-(w/3.8),
 			    h/100,
 			    w/4.5,
 			    h/20,
@@ -60,7 +62,52 @@ void valk(int w, int h){
 			    MLV_TEXT_CENTER,
 			    MLV_HORIZONTAL_CENTER,
 			    MLV_VERTICAL_CENTER,
-			    1); 
+			    k);
+
+  /*Je rajoute la possibilité de choisir son k*/
+
+  tab[12] = creer_zone_val((w/2)-(w/3.8),h/100,(w/2)-(w/3.8)+w/4.5,h/100+h/20);
+
+  /*Rajoute les flèches pour changer la valeur de k */
+
+  /*Flèche du bas */
+  MLV_draw_rectangle((w/2)-(w/3.3),
+		     h/100,
+		     w/30+2,
+		     w/30+2,
+		     MLV_COLOR_BLACK);
+
+  MLV_draw_filled_rectangle((w/2)-(w/3.3)+1,
+			    h/100+1,
+			    w/30,
+			    w/30,
+    			    MLV_COLOR_DARKSLATEGREY);
+
+  MLV_resize_image_with_proportions(fb,w/40, w/40);
+  
+  MLV_draw_image(fb,(w/2)-(w/3.3)+(w/170),((h/100))+(w/30+2)/10);
+
+  tab[10] = creer_zone_val((w/2)-(w/3.3),h/100,(w/2)-(w/3.3)+(w/30+2),h/100+(w/30+2));
+
+  /*Flèche du haut */
+
+  MLV_draw_rectangle((w/2)-(w/25),
+		     h/100,
+		     w/30+2,
+		     w/30+2,
+		     MLV_COLOR_BLACK);
+
+  MLV_draw_filled_rectangle((w/2)-(w/25)+1,
+			    h/100+1,
+			    w/30,
+			    w/30,
+    			    MLV_COLOR_DARKSLATEGREY);
+
+  MLV_resize_image_with_proportions(fh,w/40, w/40);
+  MLV_draw_image(fh,(w/2)-(w/25)+(w/150),(h/100)+(w/30+2)/10);
+
+  tab[11] = creer_zone_val((w/2)-(w/25),h/100,(w/2)-(w/25)+(w/30+2),h/100+(w/30+2));
+  
 }
 
 
@@ -234,7 +281,7 @@ void sauvegarde(int w, int h, Zone_clic tab[]){
 }
 
 /*Affiche le menu complet */
-void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[]){
+void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[], int k){
 
   reinitialise_fenetre(w,h, tab);
 
@@ -253,7 +300,7 @@ void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[]){
     exit(-1);
   }
 
-  valk(w,h);
+  valk(w,h,tab,k);
   zone_affichage(w,h, tab);
   options_affichage(w,h, tab);
   sauvegarde(w,h,tab);
