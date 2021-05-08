@@ -1,6 +1,7 @@
 #include "../Module/Menu/menu.h"
 #include "../Module/Point/point.h"
 #include "../Module/Zone/zone.h"
+#include "../Module/Lecture/lecture.h"
 
 /*Pour tester tes fonctions sur la struct point */
 
@@ -19,7 +20,13 @@ int main(){
   Zone_clic test;
   Coord ori, fin;
 
+  /*TEST LECTURE*/
+  char *fichier = "Fichier_test/fichier_test_1";
+  Point *t = NULL;
+  int nbclasses = 0,n,i;
   /*POINTS */
+
+  printf("-----\nTest sur les Points\n-----\n");
 
   pxtopoint(pp, WIDTH/100 + 3 * largeur_grille/4. , HEIGHT/1.15);
   p->x = -0.5;
@@ -43,5 +50,17 @@ int main(){
   affiche_zone(test);
   free(test);
 
+  printf("----------\nTest Lecture Fichier\n----------\n");
+
+  t = chargement_fichier(fichier, &n, &nbclasses);
+  printf("%d %d\n",n,nbclasses);
+  
+  for (i=0; i < n; i++){
+      printf("%d %f %f\n",t[i].classe, t[i].x, t[i].y);
+  }
+
+
+
+  
   exit(1);
 }
