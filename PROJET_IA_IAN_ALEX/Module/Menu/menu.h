@@ -13,11 +13,9 @@ void affiche_menu();
 void affiche_menu_principal(int w, int h, Zone_clic tab[]);
 
 /*Fonction qui affiche le menu pour manipuler l'algo */
-void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[]);
+void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[], int k);
 
 /*Fonction qui affiche le menu d'option */
 void affiche_menu_option(int w, int h, Zone_clic tab[]);
-
-
 
 #endif
