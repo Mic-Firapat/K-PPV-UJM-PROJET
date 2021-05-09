@@ -6,7 +6,7 @@ void sauvegarde_fichier(Point *t, char *nom_fichier, int n, int nbclasses){
     /*Ouverture du fichier*/
     fichier = fopen(nom_fichier, "w+");
     if (fichier == NULL){
-        printf("Impossible d'ouvrir %s\n",nom_fichier);
+      fprintf(stderr,"Impossible d'ouvrir %s\n",nom_fichier);
     }
     else {
         /*Ecriture dans le fichier*/

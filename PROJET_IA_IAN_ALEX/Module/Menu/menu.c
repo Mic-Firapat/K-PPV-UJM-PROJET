@@ -1,5 +1,8 @@
 #include "menu.h"
 #include "../Evenement/evenement.h"
+#include "../Point/point.h"
+#include "../Lecture/lecture.h"
+#include "../Sauvegarde/sauvegarde.h"
 
 extern int WIDTH, HEIGHT;
 
@@ -29,22 +32,44 @@ Description des variables :
 
    - quit -> sert à sortir de la boucle do/while de l'input box
 
+   - n -> nombre de sommet
+
+   - nbclasses -> nombre de classe
+
    - mode_algo -> Sert à afficher le mode actuel, par défaut creation
+
+   - val_k -> chaîne de caractère qui contiendra la valeur k décidé par l'utilisateur
+
+   - chemin_fichier -> Indique le répertoire des sauvegardes
+
+   - chemin -> chaîne qui une fois assembler à l'aide de chemin_fichier et nom_fichier nous permet d'accèder à nos sauvegardes.
+
+   - nom_fichier -> contient le nom du fichier entrée par l'utilisateur
+
+   - symbole -> Tableau des symboles pour représenter des classes
+
+   - couleur -> Tableau des couleurs pour représenter des classes
 
    - tab -> Contient toutes les zones sur lesquels nous pouvons cliquer
 
    - change_val_k -> input_box MLV, sert  lorsque l'on appuie sur k
 
+   - change_chemin -> input_box MLV sert lorsque l'on chercher à accéder à un fichier
+
    - event -> MLV_event, sert pour savoir si l'on utilisé l'input_box
+
+   - tableau_point -> contient nos données sur les points
 
 */
 void affiche_menu(){
-  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0;
-  char *mode_algo="creation", *val_k = NULL;
+  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0,n, nbclasses = 0;
+  char *mode_algo="creation", *val_k = NULL, *chemin_fichier = "Sauvegardes/", *chemin = malloc(1 * sizeof(char)), *nom_fichier = NULL;
+  char symbole[CMAX+1]={'o','-','+','*','/','!','?','=',':','.','#','&','@','<','>','\\','%'};
+  MLV_Color couleur[CMAX+1] = {MLV_COLOR_WHITE, MLV_COLOR_GREEN, MLV_COLOR_RED, MLV_COLOR_NAVYBLUE, MLV_COLOR_DARKMAGENTA, MLV_COLOR_ORANGE4, MLV_COLOR_SALMON2, MLV_COLOR_BROWN3, MLV_COLOR_WHEAT4, MLV_COLOR_SIENNA1, MLV_COLOR_DARKOLIVEGREEN3, MLV_COLOR_KHAKI2, MLV_COLOR_CHARTREUSE1, MLV_COLOR_AQUAMARINE3, MLV_COLOR_CYAN1, MLV_COLOR_MISTYROSE4, MLV_COLOR_IVORY1};
   Zone_clic tab[TAB_MAX];
-  MLV_Input_box *change_val_k;
+  MLV_Input_box *change_val_k, *change_chemin;
   MLV_Event event = MLV_NONE;
-  /*Point tableau_point[NMAX];*/
+  Point *tableau_point = NULL;
 
   /*Init de tab pour définir les zones de clic*/
   for(i=0;i<TAB_MAX;i++){
@@ -90,6 +115,9 @@ void affiche_menu(){
 	      }
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH,HEIGHT,mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	      boucle_menu = 2;
 	      clic = 0;
 	      break;
@@ -142,6 +170,9 @@ void affiche_menu(){
 	    }
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	    clic = 0;
 	    printf("AJOUTER FONCTION AFFICHE POINTS\n");
 	    break;
@@ -156,12 +187,18 @@ void affiche_menu(){
 	      mode_algo = "kppv";
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	      clic = 0;
 	    }
 	    else if(strcmp(mode_algo, "kppv") == 0){
 	      mode_algo = "creation";
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	      clic = 0;
 	    }
 	    else{
@@ -193,16 +230,147 @@ void affiche_menu(){
 	    printf("LANCE LE MODE PRISE DE DECISION\n");
 	    clic = 0;
 	    break;
+
+	    
 	    /*On a cliqué sur sauvegarder */
 	  case 8:
-	    printf("SAUVEGARDE DANS UN FICHIER LES DONNEES\n");
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    change_chemin = MLV_create_input_box (WIDTH/2-WIDTH/4,
+						  HEIGHT/2-HEIGHT/5,
+						  WIDTH/2,
+						  HEIGHT/5,
+						  MLV_COLOR_GREEN,
+						  MLV_COLOR_GREEN,
+						  MLV_COLOR_BLACK,
+						  "Nom du fichier:");
+
+	    MLV_draw_text_box(10,
+			      10,
+			      WIDTH/1.01,
+			      HEIGHT/4,
+			      "Pour utiliser la boîte, vous devez cliquer dessus.\nVeuillez enter un nom de fichier.\n Essayer de ne pas nommer n'importe comment votre fichier.",
+			      2,
+			      MLV_COLOR_BLACK,
+			      MLV_COLOR_GREEN,
+			      MLV_COLOR_BLACK,
+			      MLV_TEXT_CENTER,
+			      MLV_HORIZONTAL_CENTER,
+			      MLV_VERTICAL_CENTER);
+	    MLV_draw_all_input_boxes();
+	    MLV_actualise_window();
+
+	    /*Boucle tant que l'utilisateur n'a pas rentré de nom d'un fichier valide*/
+	    do{
+	      /*Récupère un evenement */
+	      event = MLV_get_event(NULL, NULL, NULL,&nom_fichier, &change_chemin,NULL, NULL, NULL, NULL);
+
+	      /*On le traite si il s'agit d'un event input_box */
+	      if ( event == MLV_INPUT_BOX){
+		chemin = realloc(chemin, sizeof(char) * (strlen(nom_fichier) + strlen(chemin_fichier)));
+		strcat(chemin, chemin_fichier);
+		strcat(chemin, nom_fichier);
+		sauvegarde_fichier(tableau_point, chemin, n, nbclasses);
+		quit = 1;
+	      }
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      MLV_draw_text_box(10,
+				10,
+				WIDTH/1.01,
+				HEIGHT/4,
+				"Pour utiliser la boîte, vous devez cliquer dessus.\nVeuillez enter un nom de fichier.\n Essayer de ne pas nommer n'importe comment votre fichier.",
+				2,
+				MLV_COLOR_BLACK,
+				MLV_COLOR_GREEN,
+				MLV_COLOR_BLACK,
+				MLV_TEXT_CENTER,
+				MLV_HORIZONTAL_CENTER,
+				MLV_VERTICAL_CENTER);
+	      MLV_draw_all_input_boxes();
+	      MLV_actualise_window();
+	    }while(quit == 0);
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	    MLV_free_input_box(change_chemin);
+	    chemin[0] = '\0';
+	    quit = 0;
 	    clic = 0;
 	    break;
 	    /*On a cliqué sur charger */
 	  case 9:
-	    printf("CHARGE LES DONNEES D'UN FICHIER\n");
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    change_chemin = MLV_create_input_box (WIDTH/2-WIDTH/4,
+						  HEIGHT/2-HEIGHT/5,
+						  WIDTH/2,
+						  HEIGHT/5,
+						  MLV_COLOR_GREEN,
+						  MLV_COLOR_GREEN,
+						  MLV_COLOR_BLACK,
+						  "Entrez le nom d'un fichier :");
+
+	    MLV_draw_text_box(10,
+			      10,
+			      WIDTH/1.01,
+			      HEIGHT/4,
+			      "Pour utiliser la boîte, vous devez cliquer dessus.\nVeuillez enter un nom de fichier.\n ATTENTION: tant que le nom de fichier ne sera pas valide vous ne quitterez pas cete boîte.\n Les noms de fichier valide sont disponibles dans le répertoire Sauvegardes.",
+			      2,
+			      MLV_COLOR_BLACK,
+			      MLV_COLOR_GREEN,
+			      MLV_COLOR_BLACK,
+			      MLV_TEXT_CENTER,
+			      MLV_HORIZONTAL_CENTER,
+			      MLV_VERTICAL_CENTER);
+	    MLV_draw_all_input_boxes();
+	    MLV_actualise_window();
+
+	    /*Boucle tant que l'utilisateur n'a pas rentré de nom d'un fichier valide*/
+	    do{
+	      /*Récupère un evenement */
+	      event = MLV_get_event(NULL, NULL, NULL,&nom_fichier, &change_chemin,NULL, NULL, NULL, NULL);
+
+	      /*On le traite si il s'agit d'un event input_box */
+	      if ( event == MLV_INPUT_BOX){
+		chemin = realloc(chemin, sizeof(char) * (strlen(nom_fichier) + strlen(chemin_fichier)));
+		strcat(chemin, chemin_fichier);
+		strcat(chemin, nom_fichier);
+	        tableau_point = chargement_fichier(chemin, &n, &nbclasses);
+
+		if (tableau_point != NULL){
+		  quit = 1;
+		}
+		chemin[0] = '\0';
+	      }
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      MLV_draw_text_box(10,
+				10,
+				WIDTH/1.1,
+				HEIGHT/4,
+				"Pour utiliser la boîte, vous devez cliquer dessus.\nVeuillez enter un nom de fichier.\n ATTENTION: tant que le nom de fichier ne sera pas valide vous ne quitterez pas cette boîte.\n Les noms de fichier valide sont disponibles dans le répertoire Sauvegardes.",
+				2,
+				MLV_COLOR_BLACK,
+				MLV_COLOR_GREEN,
+				MLV_COLOR_BLACK,
+				MLV_TEXT_CENTER,
+				MLV_HORIZONTAL_CENTER,
+				MLV_VERTICAL_CENTER);
+	      MLV_draw_all_input_boxes();
+	      MLV_actualise_window();
+	      
+	    }while(quit == 0);
+	    MLV_clear_window(MLV_rgba(102,102,102,255));
+	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	    chemin[0] = '\0';
+	    MLV_free_input_box(change_chemin);
+	    quit = 0;
 	    clic = 0;
 	    break;
+
+	    
 	    /*On a cliqué sur flèche du bas */
 	  case 10:
 	    if(k == 1){
@@ -213,21 +381,32 @@ void affiche_menu(){
 	      k--;
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	      clic = 0;
 	    }
 	    break;
 	    /*On a cliqué sur flèche du haut */
 	  case 11:
-	    if(k < NMAX){
+	    if(k < n){
 	      k++;
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
 	      clic = 0;
 	      break;
 	    }
 	    clic = 0;
 	    break;
+	    /*On a cliqué sur la valeur de k afin de la modifier à une valeur voulue */
 	  case 12:
+	    if(n == 0){
+	      clic = 0;
+	      break;
+	    }
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    change_val_k = MLV_create_input_box (WIDTH/2-WIDTH/4,
 						 HEIGHT/2-HEIGHT/5,
@@ -260,7 +439,7 @@ void affiche_menu(){
 	      /*On le traite seulement si il s'agit d'un evenement input_box */
 	      if ( event == MLV_INPUT_BOX){
 		test_val_k = atoi(val_k);
-		if(test_val_k < NMAX && test_val_k >= 1){
+		if(test_val_k < n && test_val_k >= 1){
 		  k = test_val_k;
 		  quit = 1;
 		}
@@ -285,9 +464,12 @@ void affiche_menu(){
 	    } while(quit == 0);
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    if(n != 0){
+	      affiche_points(n, tableau_point, couleur, symbole);
+	    }
 	    clic = 0;
 	    quit = 0;
-	    
+      
 	    MLV_free_input_box (change_val_k);
 	    break;
 	    /*Sinon on cliqué sur une zone inutile */
@@ -296,6 +478,10 @@ void affiche_menu(){
 	    break;
 	  }
 	  break;
+
+
+
+	  
 	  /*Troisième cas, le menu_option */
 	case 3:
 	  /*On vérifie sur quelle case on a cliqué */
@@ -345,6 +531,9 @@ void affiche_menu(){
 		}
 		MLV_clear_window(MLV_rgba(102,102,102,255));
 		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+		if(n != 0){
+		  affiche_points(n, tableau_point, couleur, symbole);
+		}
 		clic = 0;
 		boucle_menu = 2;
 	      }
@@ -365,6 +554,8 @@ void affiche_menu(){
 	      break;
 	    }
 	  break;
+
+	  
 	  /*Si nous sommes en dehors d'un menu c'est une erreur */
 	default:
 	  fprintf(stderr,"ERREUR boucle_menu : Vous n'êtes pas sur un cas possible EXIT\n");
