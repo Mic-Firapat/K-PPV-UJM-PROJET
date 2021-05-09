@@ -75,7 +75,6 @@ float *distances(Point *t, Point *p, int n){
     for (i=0; i < n; i++){
         d[i] = dist( &(t[i]), p);
     }
-
     return d;
 }
 
@@ -87,25 +86,25 @@ int *k_voisins(Point *t, Point *p, int k, int n){
     int *voisins = malloc(sizeof(int) * (k+1));
     int i,j,taille_voisins = 0, imax=0;
     float dmax =  -1;
-    for (i = 0; i < n ; i++){
-        if (taille_voisins < k && d[i] != dist(p,p)){
+    for (i = 0; i < n-1 ; i++){
+        if (taille_voisins < k){
             voisins[taille_voisins+1] = i;
             taille_voisins++;
             if (dmax < d[i]){
                 dmax = d[i];
-                imax = i+1;
+                imax = taille_voisins + 1;
             }
         }
         else {
-            if (d[i] != dist(p,p)){
-                if (dmax > d[i]){
-                    voisins[imax] = i;
-                    dmax = -1;
-                    for (j = 1; j < k +1; j++){
-                        if (dmax < d[voisins[j]]){
-                            dmax = d[voisins[j]];
-                            imax = j+1;
-                        }
+
+            if (dmax > d[i]){
+                voisins[imax] = i;
+                dmax = -1;
+                for (j = 1; j < k +1; j++){
+                    if (dmax < d[voisins[j]]){
+                        dmax = d[voisins[j]];
+                        imax = j;
+                        
                     }
                 }
             }
@@ -122,7 +121,7 @@ int classe_majoritaire(Point *t, int *voisins, int k, int nbclasses){
         c[i] = 0;
     }
     for (i=1;i < k+1; i++){
-        c[t[voisins[i]].classe] = c[t[voisins[i]].classe];
+        c[t[voisins[i]].classe] = c[t[voisins[i]].classe] + 1;
     }
     for (i = 1; i < nbclasses + 1; i++){
         if (c[i] > cmax){
@@ -130,5 +129,10 @@ int classe_majoritaire(Point *t, int *voisins, int k, int nbclasses){
             classe = i;
         }
     }
+    /*Debug
+    printf("%d\n",nbclasses);
+    for (i = 1; i < nbclasses + 1; i++){
+        printf("%d %d\n",i,c[i]);
+        }*/
     return classe;
 }

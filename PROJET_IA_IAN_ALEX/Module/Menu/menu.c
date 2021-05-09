@@ -72,7 +72,7 @@ Description des variables :
 
 */
 void affiche_menu(){
-  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0,n=0, nbclasses = 0, classe=0, classe_actuelle = 1;
+  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0,n=0, nbclasses = 1, classe=0, classe_actuelle = 1;
   int *voisins = NULL;
   char *mode_algo="creation", *val_k = NULL, *chemin_fichier = "Sauvegardes/", *chemin = malloc(1 * sizeof(char)), *nom_fichier = NULL, *val_classe = NULL;
   char symbole[CMAX+1]={'o','-','+','*','/','!','?','=',':','.','#','&','@','<','>','\\','%'};
@@ -285,7 +285,7 @@ Deuxième cas, le menu_algo
 			      HEIGHT/10,
 			      WIDTH/1.1,
 			      HEIGHT/8,
-			      "Pour utiliser la boîte, vous devez cliquer dessus.\nAttention : Vous ne quitterez pas ce menu tant qu'une valeur valide ne sera rentrée.\n(Une valeur valide est un entier compris entre 1 et le nombre max de classe : %d)",
+			      "Pour utiliser la boîte, vous devez cliquer dessus.\nAttention : Vous ne quitterez pas ce menu tant qu'une valeur valide ne sera rentrée.\n(Une valeur valide est un entier compris entre 1 et le nombre max de classes : %d)",
 			      2,
 			      MLV_COLOR_BLACK,
 			      MLV_COLOR_GREEN,
@@ -342,22 +342,35 @@ Deuxième cas, le menu_algo
 	    quit = 0;
       
 	    MLV_free_input_box (change_classe);
-	    clic = 0;
+            MLV_actualise_window();
 	    break;
 
 	    /*On a cliqué sur Voisinage */
 	  case 6:
-              /*Marche pas encore*/
-              voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
-              
-              MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), MLV_COLOR_RED );
-              MLV_actualise_window();
+              if (n > 1){
+                  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+                  
+                  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[tableau_point[n-1].classe]);
+                  MLV_actualise_window();
+              }
               clic = 0;
               break;
             
 	    /*On a cliqué sur Prise de décision */
 	  case 7:
-	    printf("LANCE LE MODE PRISE DE DECISION\n");
+              if (n > 1){
+                  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+                  classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+                  tableau_point[n-1].classe = classe;
+                  MLV_clear_window(MLV_rgba(102,102,102,255));
+                  affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+                  if(n != 0){
+                      affiche_points(n, tableau_point, couleur, symbole);
+                  }
+                  MLV_actualise_window();
+              }
+              
+	    
 	    clic = 0;
 	    break;
 
@@ -422,6 +435,7 @@ Deuxième cas, le menu_algo
 	    if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
+            MLV_actualise_window();
 	    MLV_free_input_box(change_chemin);
 	    chemin[0] = '\0';
 	    quit = 0;
@@ -495,6 +509,7 @@ Deuxième cas, le menu_algo
 	    if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
+            MLV_actualise_window();
 	    chemin[0] = '\0';
 	    MLV_free_input_box(change_chemin);
 	    quit = 0;
@@ -515,20 +530,20 @@ Deuxième cas, le menu_algo
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
+              MLV_actualise_window();
 	      clic = 0;
 	    }
 	    break;
 	    /*On a cliqué sur flèche du haut */
 	  case 11:
-	    if(k < n){
+	    if(k < n-1){
 	      k++;
 	      MLV_clear_window(MLV_rgba(102,102,102,255));
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
-	      clic = 0;
-	      break;
+              MLV_actualise_window();
 	    }
 	    clic = 0;
 	    break;
@@ -602,6 +617,7 @@ Deuxième cas, le menu_algo
 	    if(n != 0){
 	      affiche_points(n, tableau_point, couleur, symbole);
 	    }
+            MLV_actualise_window();
 	    clic = 0;
 	    quit = 0;
       
@@ -612,6 +628,7 @@ Deuxième cas, le menu_algo
 	    /*Sinon on cliqué sur une zone inutile */
 	  default:
 	    clic=0;
+            MLV_actualise_window();
 	    break;
 	  }
 	  break;
