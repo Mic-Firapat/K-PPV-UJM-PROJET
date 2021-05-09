@@ -350,7 +350,7 @@ Deuxième cas, le menu_algo
               if (n > 1){
                   voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
                   
-                  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[tableau_point[n-1].classe]);
+                  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
                   MLV_actualise_window();
               }
               clic = 0;
