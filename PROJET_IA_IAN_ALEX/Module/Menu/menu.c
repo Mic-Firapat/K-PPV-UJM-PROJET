@@ -328,7 +328,7 @@ Deuxième cas, le menu_algo
 				MLV_TEXT_CENTER,
 				MLV_HORIZONTAL_CENTER,
 				MLV_VERTICAL_CENTER,
-				nbclasses);
+				CMAX);
 	      
 	      MLV_draw_all_input_boxes();
 	      MLV_actualise_window();
