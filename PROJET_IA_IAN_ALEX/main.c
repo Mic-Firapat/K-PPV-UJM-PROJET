@@ -4,7 +4,7 @@
 #include "./Module/Menu/menu.h"
 
 /*Taille fenêtre*/
-int WIDTH=640, HEIGHT=480;
+int WIDTH=1280, HEIGHT=720;
 
 
 /*Lance la fonction pour l'interface graphique */

@@ -170,7 +170,7 @@ void bouton_point(int w, int h, char * action, Zone_clic tab[]){
 
   MLV_draw_text_box((w/2)+w/50,
 		    h/10,
-		    w/5,
+		    w/3.5,
 		    h/13,
 		    "Cliquez ici pour:\n %s",
 		    3,
@@ -182,7 +182,7 @@ void bouton_point(int w, int h, char * action, Zone_clic tab[]){
 		    MLV_VERTICAL_CENTER,
 		    action);
   
-  tab[4] = creer_zone_val((w/2)+w/50, h/10, w/5 +(w/2)+w/50, h/10 + h/13);
+  tab[4] = creer_zone_val((w/2)+w/50, h/10, w/3.5 +(w/2)+w/50, h/10 + h/13);
 }
 
 /*Ajoute le bouton ajout de classe */
@@ -291,14 +291,14 @@ void sauvegarde(int w, int h, Zone_clic tab[]){
   tab[9] = creer_zone_val(w-(w/2.2),h/1.2,w-(w/2.2)+w/2.5,h/1.2+h/15);
 }
 
+
+
 /*Affiche le menu complet */
 void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[], int k){
-
   reinitialise_fenetre(w,h, tab);
-
   if(strcmp(m, "creation") == 0){
     changement_mode(w,h,m, tab);
-    bouton_point(w,h,"Placer un point", tab);
+    bouton_point(w,h,"Supprimer un point", tab);
     ajout_classe(w,h, tab);
   }
   else if(strcmp(m, "kppv") == 0){
@@ -310,6 +310,7 @@ void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[], int k){
     MLV_free_window();
     exit(-1);
   }
+  
 
   valk(w,h,tab,k);
   zone_affichage(w,h, tab);
@@ -319,5 +320,4 @@ void affiche_menu_algo(int w, int h, char * m, Zone_clic tab[], int k){
   dessine_engrenage(w/40,(w - (w/3.5)-w/40-h/100),h/100, tab);
   
   MLV_actualise_window();
-
 }
