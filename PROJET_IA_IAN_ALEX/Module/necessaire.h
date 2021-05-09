@@ -9,10 +9,10 @@
 #include <math.h>
 #include <MLV/MLV_all.h>
 
-#define NMAX 100
+#define NMAX 5000
 #define TAB_MAX 15
 #define DIMENSION 2
-#define CMAX 2
+#define CMAX 16
 
 typedef struct coordonnees {
     int x;

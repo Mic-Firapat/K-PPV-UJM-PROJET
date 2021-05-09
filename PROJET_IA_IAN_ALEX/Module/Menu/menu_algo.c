@@ -47,8 +47,8 @@ void reinitialise_fenetre(int w, int h, Zone_clic tab[]){
 
 /*Ajoute la cellule valeur de k */
 void valk(int w, int h, Zone_clic tab[], int k){
-  MLV_Image *fh = MLV_load_image("./Module/Image/test.png");
-  MLV_Image *fb = MLV_load_image("./Module/Image/test_bas.png");
+  MLV_Image *fh = MLV_load_image("./Module/Image/fleche_haut.png");
+  MLV_Image *fb = MLV_load_image("./Module/Image/fleche_bas.png");
 
   MLV_draw_text_box((w/2)-(w/3.8),
 			    h/100,
@@ -85,7 +85,7 @@ void valk(int w, int h, Zone_clic tab[], int k){
 
   MLV_resize_image_with_proportions(fb,w/40, w/40);
   
-  MLV_draw_image(fb,(w/2)-(w/3.3)+(w/170),((h/100))+(w/30+2)/10);
+  MLV_draw_image(fb,(w/2)-(w/3.3)+(w/150),((h/100))+(w/30+2)/10);
 
   tab[10] = creer_zone_val((w/2)-(w/3.3),h/100,(w/2)-(w/3.3)+(w/30+2),h/100+(w/30+2));
 
@@ -114,7 +114,13 @@ void valk(int w, int h, Zone_clic tab[], int k){
 /*Ajoute la zone d'affichage (la grille) */
 void zone_affichage(int w, int h, Zone_clic tab[]){
   int x=w/100, y=h/10 ,width=w/2, height=h/1.15;
+
   
+  MLV_draw_rectangle(x-1,
+		     y-1,
+		     width+2,
+		     height+2,
+		     MLV_COLOR_WHITE);
 
   MLV_draw_filled_rectangle(x,
 			    y,
@@ -201,7 +207,12 @@ void ajout_classe(int w, int h, Zone_clic tab[]){
 /*Ajoute l'onglet des options d'affichage */
 void options_affichage(int w, int h, Zone_clic tab[]){
   int taille_x=0, taille_y=0;
-  
+
+  MLV_draw_rectangle(w/2+w/50-1,
+		     h/3.2-1,
+		     w/2.1+2,
+		     h/2+2,
+		     MLV_COLOR_WHITE);
   
   MLV_draw_filled_rectangle(w/2+w/50,
 			    h/3.2,

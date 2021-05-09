@@ -58,6 +58,8 @@ int main(){
   affiche_zone(test);
   free(test);
 
+  /*LECTURE */
+
   printf("----------\nTest Lecture Fichier\n----------\n");
 
   t = chargement_fichier(fichier, &n, &nbclasses);
@@ -90,19 +92,6 @@ int main(){
   printf("----------\nTest sauvegarde Fichier\n----------\n");
 
   sauvegarde_fichier(t, sauve, nb, nbclassesb);
-  
-  
-  printf("----------\nTest sur l'ajout et le retrait de points\n----------\n");
-  printf("%d\n",n);
-  t = retrait_point_tab(t, &n);
-  printf("%d\n",n);
-  t = ajout_point_tab(t, p, &n);
-  printf("%d\n",n);
-  t = ajout_point_tab(t, pp, &n);
-  printf("%d\n",n);
-  for (i=0; i < n; i++){
-      printf("%d %f %f\n",t[i].classe, t[i].x, t[i].y);
-  }
 
 
   exit(1);
