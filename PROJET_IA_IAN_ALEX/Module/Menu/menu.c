@@ -40,6 +40,8 @@ Description des variables :
 
    - classe_actuelle -> dernière classe rentrée, classe par défaut lors d'un nouveau clic
 
+   - voisin -> peut prendre 1 ou 0, détermine si le cercle doit apparaître
+
    - mode_algo -> Sert à afficher le mode actuel, par défaut creation
 
    - val_k -> chaîne de caractère qui contiendra la valeur k décidé par l'utilisateur
@@ -72,7 +74,7 @@ Description des variables :
 
 */
 void affiche_menu(){
-  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0,n=0, nbclasses = 1, classe=0, classe_actuelle = 1;
+  int clic, en_cours=1, boucle_menu,i, x_souris, y_souris, menu_precedent=0, k=1, test_val_k = 0, quit = 0,n=0, nbclasses = 1, classe=0, classe_actuelle = 1, voisin = 0;
   int *voisins = NULL;
   char *mode_algo="creation", *val_k = NULL, *chemin_fichier = "Sauvegardes/", *chemin = malloc(1 * sizeof(char)), *nom_fichier = NULL, *val_classe = NULL;
   char symbole[CMAX+1]={'o','-','+','*','/','!','?','=',':','.','#','&','@','<','>','\\','%'};
@@ -116,7 +118,7 @@ void affiche_menu(){
 	{
             
 	  /*
-Premier cas, le menu principal 
+	    Premier cas, le menu principal 
           */
 	case 1:
 	  /*On vérifie sur quelle case on a cliqué */
@@ -169,7 +171,7 @@ Premier cas, le menu principal
 
           
 	  /*
-Deuxième cas, le menu_algo 
+	    Deuxième cas, le menu_algo 
           */
 	case 2:
 	  /*On vérifie sur quelle case on a cliqué */
@@ -200,6 +202,7 @@ Deuxième cas, le menu_algo
             k = 1;
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	    voisin = 0;
 	    clic = 0;
 	    break;
             
@@ -213,6 +216,13 @@ Deuxième cas, le menu_algo
 	    if(n != 0){
 	      affiche_points(n, tableau_point, couleur, symbole);
 	    }
+	    if (voisin == 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	    }
+	    MLV_actualise_window();
 	    clic = 0;
 	    break;
             
@@ -225,6 +235,12 @@ Deuxième cas, le menu_algo
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	      }
 	      clic = 0;
 	    }
 	    else if(strcmp(mode_algo, "kppv") == 0){
@@ -233,6 +249,12 @@ Deuxième cas, le menu_algo
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
 	      }
 	      clic = 0;
 	    }
@@ -253,18 +275,43 @@ Deuxième cas, le menu_algo
 	      break;
 	    }
             if (strcmp(mode_algo,"creation") == 0){
-                tableau_point = retrait_point_tab(tableau_point, &n);
-                MLV_clear_window(MLV_rgba(102,102,102,255));
-                affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
-                if(n != 0){
-                    affiche_points(n, tableau_point, couleur, symbole);
-                }
-                clic = 0;
+	      tableau_point = retrait_point_tab(tableau_point, &n);
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	      }
+	      clic = 0;
             }
             else {
-                printf("CLASSE MODE KPPV\n");
+	      if (n > 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_clear_window(MLV_rgba(102,102,102,255));
+		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+		if(n != 0){
+		  affiche_points(n, tableau_point, couleur, symbole);
+		}
+		if (voisin == 1){
+		  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		  classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		  tableau_point[n-1].classe = classe;
+		  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+		}
+		MLV_actualise_window();
+              }
+              
+	    
+	      clic = 0;
             }
-                break;
+	    break;
             
 	    /*On a cliqué sur ajout de classe */
 	  case 5:
@@ -293,7 +340,7 @@ Deuxième cas, le menu_algo
 			      MLV_TEXT_CENTER,
 			      MLV_HORIZONTAL_CENTER,
 			      MLV_VERTICAL_CENTER,
-			      CMAX);
+			      CMAX-1);
 	    MLV_draw_all_input_boxes();
 	    MLV_actualise_window();
 	    /*boucle tant que l'utilisateur n'entre pas une valeur numérique valide ou ne quitte pas l'input box */
@@ -306,9 +353,9 @@ Deuxième cas, le menu_algo
 	        classe = atoi(val_classe);
 		printf("%d\n",classe);
 		if(classe < CMAX && classe >= 1){
-                    if (classe > nbclasses){
-                        nbclasses = classe;
-                    }
+		  if (classe > nbclasses){
+		    nbclasses = classe;
+		  }
 		  tableau_point[n-1].classe = classe;
                   classe_actuelle = classe;
 		  quit = 1;
@@ -328,7 +375,7 @@ Deuxième cas, le menu_algo
 				MLV_TEXT_CENTER,
 				MLV_HORIZONTAL_CENTER,
 				MLV_VERTICAL_CENTER,
-				CMAX);
+				CMAX-1);
 	      
 	      MLV_draw_all_input_boxes();
 	      MLV_actualise_window();
@@ -337,6 +384,12 @@ Deuxième cas, le menu_algo
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	    if(n != 0){
 	      affiche_points(n, tableau_point, couleur, symbole);
+	    }
+	    if (voisin == 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
 	    }
 	    clic = 0;
 	    quit = 0;
@@ -347,31 +400,48 @@ Deuxième cas, le menu_algo
 
 	    /*On a cliqué sur Voisinage */
 	  case 6:
-              if (n > 1){
-                  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	    if (n > 1){
+	      if(voisin == 0){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
                   
-                  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
-                  MLV_actualise_window();
-              }
-              clic = 0;
-              break;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+		MLV_actualise_window();
+		voisin = 1;
+		clic = 0;
+	      }
+	      else if (voisin == 1){
+		MLV_clear_window(MLV_rgba(102,102,102,255));
+		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+		if(n != 0){
+		  affiche_points(n, tableau_point, couleur, symbole);
+		}
+		MLV_actualise_window();
+		clic = 0;
+		voisin = 0;
+	      }
+	    }
+	    break;
             
 	    /*On a cliqué sur Prise de décision */
 	  case 7:
-              if (n > 1){
-                  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
-                  classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
-                  tableau_point[n-1].classe = classe;
-                  MLV_clear_window(MLV_rgba(102,102,102,255));
-                  affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
-                  if(n != 0){
-                      affiche_points(n, tableau_point, couleur, symbole);
-                  }
-                  MLV_actualise_window();
-              }
-              
-	    
-	    clic = 0;
+	    if (n > 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_clear_window(MLV_rgba(102,102,102,255));
+	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
+	      if(n != 0){
+		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	      }
+	      MLV_actualise_window();
+	      clic = 0;
+	    }
 	    break;
 
 	    /*On a cliqué sur sauvegarder */
@@ -433,8 +503,14 @@ Deuxième cas, le menu_algo
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	    if(n != 0){
-		affiche_points(n, tableau_point, couleur, symbole);
-	      }
+	      affiche_points(n, tableau_point, couleur, symbole);
+	    }
+	    if (voisin == 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	    }
             MLV_actualise_window();
 	    MLV_free_input_box(change_chemin);
 	    chemin[0] = '\0';
@@ -507,8 +583,14 @@ Deuxième cas, le menu_algo
 	    MLV_clear_window(MLV_rgba(102,102,102,255));
 	    affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	    if(n != 0){
-		affiche_points(n, tableau_point, couleur, symbole);
-	      }
+	      affiche_points(n, tableau_point, couleur, symbole);
+	    }
+	    if (voisin == 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	    }
             MLV_actualise_window();
 	    chemin[0] = '\0';
 	    MLV_free_input_box(change_chemin);
@@ -530,6 +612,12 @@ Deuxième cas, le menu_algo
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
 	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	      }
               MLV_actualise_window();
 	      clic = 0;
 	    }
@@ -542,6 +630,12 @@ Deuxième cas, le menu_algo
 	      affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 	      if(n != 0){
 		affiche_points(n, tableau_point, couleur, symbole);
+	      }
+	      if (voisin == 1){
+		voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		tableau_point[n-1].classe = classe;
+		MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
 	      }
               MLV_actualise_window();
 	    }
@@ -617,6 +711,12 @@ Deuxième cas, le menu_algo
 	    if(n != 0){
 	      affiche_points(n, tableau_point, couleur, symbole);
 	    }
+	    if (voisin == 1){
+	      voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+	      classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+	      tableau_point[n-1].classe = classe;
+	      MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
+	    }
             MLV_actualise_window();
 	    clic = 0;
 	    quit = 0;
@@ -689,6 +789,12 @@ Deuxième cas, le menu_algo
 		affiche_menu_algo(WIDTH, HEIGHT, mode_algo, tab, k);
 		if(n != 0){
 		  affiche_points(n, tableau_point, couleur, symbole);
+		}
+		if (voisin == 1){
+		  voisins = k_voisins(tableau_point, &(tableau_point[n-1]), k, n);
+		  classe = classe_majoritaire(tableau_point, voisins, k, nbclasses);
+		  tableau_point[n-1].classe = classe;
+		  MLV_draw_circle(coordtopx(&(tableau_point[n-1]))->x, coordtopx(&(tableau_point[n-1]))->y,distpx(&(tableau_point[n-1]),&(tableau_point[voisins[0]])), couleur[classe_majoritaire(tableau_point, voisins, k, nbclasses)]);
 		}
 		clic = 0;
 		boucle_menu = 2;
