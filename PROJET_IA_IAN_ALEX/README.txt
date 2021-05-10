@@ -12,7 +12,7 @@ Cette archive comporte un MAKEFILE qui va vous permettre ces actions dans votre 
 
       - make clean => Ceci nettoie le répertoire de tout fichier objet ou temporaire, elle est automatiquement lancée lors d'un make.
 
-      -make clean_all => Cette commande en plus de faire ce que fait le make clean, purifie le répertoire de l'exécutable précédement crée à l'aide de make.
+      - make clean_all => Cette commande en plus de faire ce que fait le make clean, purifie le répertoire de l'exécutable précédement crée à l'aide de make.
 
 
 
