@@ -15,7 +15,7 @@ int main(){
   Point *p = creer_point();
   Coord *c;
   Point *pp = creer_point();
-  double largeur_grille= WIDTH/2. - WIDTH/100., hauteur_grille= HEIGHT/1.15 - HEIGHT/10.;
+  double largeur_grille= WIDTH/2. - WIDTH/100.;
 
   /*TEST ZONE */
   Zone_clic test;
