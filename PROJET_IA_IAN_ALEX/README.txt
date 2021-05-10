@@ -4,7 +4,11 @@ Cette note vous indique tout ce qui est important à savoir sur le projet de Ian
 
 Cette archive comporte un MAKEFILE qui va vous permettre ces actions dans votre terminal :
 
-      - make => Ceci créera l'exécutable et procèdera au nettoyage du répertoire afin qu'il reste propre de tout fichier objet ou temporaire.
+      - make => Ceci créera l'exécutable de l'algo et des tests et procèdera au nettoyage du répertoire afin qu'il reste propre de tout fichier objet ou temporaire.
+      
+      - make executable => Crée l'exécutable de l'algo.
+      
+      - make test_fct => Crée l'exécutable des tests de nos fonctions.
 
       - make clean => Ceci nettoie le répertoire de tout fichier objet ou temporaire, elle est automatiquement lancée lors d'un make.
 
