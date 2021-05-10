@@ -351,7 +351,6 @@ void affiche_menu(){
 	      /*On le traite seulement si il s'agit d'un evenement input_box */
 	      if (event == MLV_INPUT_BOX){
 	        classe = atoi(val_classe);
-		printf("%d\n",classe);
 		if(classe < CMAX && classe >= 1){
 		  if (classe > nbclasses){
 		    nbclasses = classe;
